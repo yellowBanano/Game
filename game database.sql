@@ -63,9 +63,20 @@ CREATE TABLE items (id INT AUTO_INCREMENT,
                     amount INT, 
                     PRIMARY KEY(id));
 CREATE TABLE quests (id INT AUTO_INCREMENT, 
-                    name VARCHAR(30), 
+                    name VARCHAR(30),
+		    first_step INT,
                     description TEXT, 
-                    PRIMARY KEY(id));
+                    PRIMARY KEY(id),
+		    FOREIGN KEY(first_step) REFERENCES steps(id));
+CREATE TABLE steps (id INT AUTO_INCREMENT,
+		    name VARCHAR(30),
+		    PRIMARY KEY(id));
+CREATE TABLE variants (id INT AUTO_INCREMENT,
+		    step_id INT,
+		    leads_to_id INT,
+		    PRIMARY KEY(id),
+		    FOREIGN KEY(step_id) REFERENCES steps(id),
+		    FOREIGN KEY(leads_to_id) REFERENCES steps(id));
 CREATE TABLE rewards (id INT AUTO_INCREMENT,
                     EXP INT, 
                     money INT, 
@@ -117,7 +128,10 @@ CREATE TABLE types_of_spells (id INT AUTO_INCREMENT,
                     PRIMARY KEY(id));
 					
 				#CONNECTORS
-                
+CREATE TABLE complited_questions (id_avatar INT, id_step INT, id_quest INT, PRIMARY KEY(id_avatar, id_step, id_quest),
+		    FOREIGN KEY(id_avatar) REFERENCES avatars(id), 
+                    FOREIGN KEY(id_step) REFERENCES steps(id)
+                    FOREIGN KEY(id_quest) REFERENCES quests(id));
 CREATE TABLE inventories (id_avatar INT, id_item INT, PRIMARY KEY(id_avatar, id_item), 
                     FOREIGN KEY(id_avatar) REFERENCES avatars(id), 
                     FOREIGN KEY(id_item) REFERENCES items(id));
